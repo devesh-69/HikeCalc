@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Salary Hike Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --cream: #faf8f4;
+        --white: #ffffff;
+        --ink: #1c1917;
+        --ink2: #57534e;
+        --ink3: #a8a29e;
+        --line: #e7e5e0;
+        --line2: #f0ede8;
+        --sage: #4a7c59;
+        --sage-light: #edf4ef;
+        --rust: #c05621;
+        --rust-light: #fef3ec;
+        --sky: #2563a8;
+        --sky-light: #eff4fc;
+        --gold: #b45309;
+        --gold-light: #fefce8;
+        --r: 12px;
+        --r-sm: 8px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--cream);
+        color: var(--ink);
+        min-height: 100vh;
+        padding-bottom: 72px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .header {
+        background: var(--white);
+        border-bottom: 1px solid var(--line);
+        padding: 18px 20px 14px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        max-width: 480px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand-name {
+        font-family: "Lora", serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .brand-sub {
+        font-size: 11px;
+        color: var(--ink3);
+        margin-top: 1px;
+      }
+      .pill-toggle {
+        display: flex;
+        background: var(--line2);
+        border-radius: 50px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .pill-btn {
+        padding: 5px 13px;
+        border: none;
+        background: transparent;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--ink3);
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .pill-btn.active {
+        background: var(--white);
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+      .main {
+        padding: 20px;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+      .section-label {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--ink3);
+        margin-bottom: 10px;
+      }
+      .card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        padding: 18px;
+        margin-bottom: 14px;
+        animation: slideUp 0.22s ease both;
+      }
+      .card:nth-child(2) {
+        animation-delay: 0.04s;
+      }
+      .card:nth-child(3) {
+        animation-delay: 0.08s;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .field {
+        margin-bottom: 12px;
+      }
+      .field:last-child {
+        margin-bottom: 0;
+      }
+      .field-label {
+        font-size: 12px;
+        color: var(--ink2);
+        font-weight: 500;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .field-input-wrap {
+        display: flex;
+      }
+      .field-prefix {
+        background: var(--line2);
+        border: 1px solid var(--line);
+        border-right: none;
+        border-radius: var(--r-sm) 0 0 var(--r-sm);
+        padding: 0 13px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: var(--ink2);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .field-input {
+        flex: 1;
+        border: 1px solid var(--line);
+        background: var(--white);
+        border-radius: 0 var(--r-sm) var(--r-sm) 0;
+        padding: 13px 14px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--ink);
+        outline: none;
+        -webkit-appearance: none;
+        transition: border-color 0.15s;
+      }
+      .field-input:focus {
+        border-color: var(--ink);
+      }
+      .field-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+      .mode-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .mode-tab {
+        flex: 1;
+        padding: 10px 6px;
+        background: var(--line2);
+        border: 1.5px solid transparent;
+        border-radius: var(--r-sm);
+        cursor: pointer;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink2);
+        transition: all 0.15s;
+      }
+      .mode-tab.active {
+        background: var(--white);
+        border-color: var(--ink);
+        color: var(--ink);
+      }
+      .result-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .result-tile {
+        border-radius: var(--r-sm);
+        padding: 14px 12px;
+        background: var(--line2);
+        border: 1px solid var(--line);
+      }
+      .result-tile.sage-tile {
+        background: var(--sage-light);
+        border-color: #c3ddc9;
+      }
+      .result-tile.rust-tile {
+        background: var(--rust-light);
+        border-color: #f6cebc;
+      }
+      .result-tile.sky-tile {
+        background: var(--sky-light);
+        border-color: #bfcfea;
+      }
+      .result-tile.gold-tile {
+        background: var(--gold-light);
+        border-color: #f6e096;
+      }
+      .tile-label {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--ink3);
+        margin-bottom: 6px;
+      }
+      .tile-label.sage {
+        color: #3a6347;
+      }
+      .tile-label.rust {
+        color: #9a4215;
+      }
+      .tile-label.sky {
+        color: #1a4f8a;
+      }
+      .tile-label.gold {
+        color: #8a4005;
+      }
+      .tile-value {
+        font-size: 19px;
+        font-weight: 600;
+        font-family: "Lora", serif;
+        color: var(--ink);
+      }
+      .tile-sub {
+        font-size: 11px;
+        color: var(--ink3);
+        margin-top: 3px;
+      }
+      .breakdown {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .breakdown-bar-wrap {
+        height: 6px;
+        background: var(--line2);
+        border-radius: 50px;
+        overflow: hidden;
+        margin: 8px 0;
+      }
+      .breakdown-bar-fill {
+        height: 100%;
+        background: var(--sage);
+        border-radius: 50px;
+        transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .breakdown-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--ink3);
+      }
+      .breakdown-meta span {
+        color: var(--sage);
+        font-weight: 500;
+      }
+      .divider {
+        border: none;
+        border-top: 1px solid var(--line);
+        margin: 14px 0;
+      }
+      .yearly-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .yearly-item {
+        text-align: center;
+      }
+      .yearly-num {
+        font-size: 16px;
+        font-weight: 600;
+        font-family: "Lora", serif;
+      }
+      .yearly-label {
+        font-size: 11px;
+        color: var(--ink3);
+        margin-top: 2px;
+      }
+      .offer-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .offer-item:last-of-type {
+        border-bottom: none;
+      }
+      .offer-swatch {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .offer-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .offer-name {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .offer-base {
+        font-size: 11px;
+        color: var(--ink3);
+      }
+      .offer-new {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--sage);
+      }
+      .offer-pct {
+        font-size: 11px;
+        color: var(--ink3);
+      }
+      .btn-del {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--ink3);
+        font-size: 20px;
+        line-height: 1;
+        padding: 4px;
+        border-radius: 6px;
+        transition: color 0.15s;
+      }
+      .btn-del:active {
+        color: var(--rust);
+      }
+      .add-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .add-input {
+        flex: 1;
+        min-width: 0;
+        border: 1px solid var(--line);
+        background: var(--white);
+        border-radius: var(--r-sm);
+        padding: 11px 12px;
+        color: var(--ink);
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        outline: none;
+        -webkit-appearance: none;
+        transition: border-color 0.15s;
+      }
+      .add-input:focus {
+        border-color: var(--ink);
+      }
+      .add-input::placeholder {
+        color: var(--ink3);
+        font-weight: 400;
+        font-size: 13px;
+      }
+      .add-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+      .btn-add {
+        background: var(--ink);
+        color: var(--white);
+        border: none;
+        border-radius: var(--r-sm);
+        padding: 11px 16px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      .btn-add:active {
+        opacity: 0.7;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 24px 0;
+        color: var(--ink3);
+        font-size: 13px;
+      }
+      .chart-box {
+        position: relative;
+        height: 210px;
+        margin-top: 4px;
+      }
+      .growth-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .growth-table th {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--ink3);
+        padding: 0 0 10px 0;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+      .growth-table th:not(:first-child) {
+        text-align: right;
+      }
+      .growth-table td {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line2);
+        font-size: 13px;
+      }
+      .growth-table td:not(:first-child) {
+        text-align: right;
+        font-weight: 500;
+      }
+      .growth-table tr:last-child td {
+        border-bottom: none;
+      }
+      .growth-table .yr {
+        color: var(--ink2);
+        font-size: 12px;
+      }
+      .growth-table .gain {
+        color: var(--sage);
+        font-size: 12px;
+      }
+      .now-row td {
+        background: var(--sage-light);
+      }
+      .now-row td:first-child {
+        border-radius: 6px 0 0 6px;
+        padding-left: 8px;
+      }
+      .now-row td:last-child {
+        border-radius: 0 6px 6px 0;
+        padding-right: 8px;
+      }
+      .tab-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border-top: 1px solid var(--line);
+        display: flex;
+        padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+        z-index: 200;
+      }
+      .tab-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--ink3);
+        padding: 6px 0;
+        transition: color 0.15s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .tab-btn.active {
+        color: var(--ink);
+      }
+      .tab-icon-wrap {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+      }
+      .tab-btn.active .tab-icon-wrap {
+        background: var(--line2);
+      }
+      .tab-icon-wrap svg {
+        width: 16px;
+        height: 16px;
+      }
+      .tab-lbl {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+      }
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+      .compare-select {
+        border: 1px solid var(--line);
+        background: var(--line2);
+        border-radius: 4px;
+        padding: 3px 6px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 11px;
+        color: var(--ink2);
+        outline: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-inner">
+        <div>
+          <div class="brand-name">HikeCalc</div>
+          <div class="brand-sub">Salary hike calculator</div>
+        </div>
+        <div class="pill-toggle">
+          <button class="pill-btn active" onclick="setSalaryMode('monthly')">
+            Monthly
+          </button>
+          <button class="pill-btn" onclick="setSalaryMode('yearly')">
+            Yearly
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="page active" id="page-calc">
+        <div class="card">
+          <div class="section-label">Current salary</div>
+          <div class="field">
+            <label class="field-label" id="salary-label"
+              >Your monthly salary</label
+            >
+            <div class="field-input-wrap">
+              <div class="field-prefix">₹</div>
+              <input
+                type="number"
+                class="field-input"
+                id="current-salary"
+                value="25000"
+                oninput="calculate()"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-label">Hike offered</div>
+          <div class="mode-tabs">
+            <div
+              class="mode-tab active"
+              id="tab-amount"
+              onclick="setHikeMode('amount')"
+            >
+              Fixed amount ₹
+            </div>
+            <div
+              class="mode-tab"
+              id="tab-percent"
+              onclick="setHikeMode('percent')"
+            >
+              Percentage %
+            </div>
+          </div>
+          <div class="field" id="input-amount">
+            <label class="field-label">Hike in rupees</label>
+            <div class="field-input-wrap">
+              <div class="field-prefix">₹</div>
+              <input
+                type="number"
+                class="field-input"
+                id="hike-amount"
+                value="1000"
+                oninput="calculate()"
+              />
+            </div>
+          </div>
+          <div class="field" id="input-percent" style="display: none">
+            <label class="field-label">Hike percentage</label>
+            <div class="field-input-wrap">
+              <div class="field-prefix">%</div>
+              <input
+                type="number"
+                class="field-input"
+                id="hike-percent"
+                value="10"
+                oninput="calculate()"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-label">Your result</div>
+          <div class="result-row">
+            <div class="result-tile sage-tile">
+              <div class="tile-label sage">New salary</div>
+              <div class="tile-value" id="new-sal">₹26,000</div>
+              <div class="tile-sub" id="new-sal-sub">per month</div>
+            </div>
+            <div class="result-tile rust-tile">
+              <div class="tile-label rust">Hike %</div>
+              <div class="tile-value" id="hike-pct">4.00%</div>
+              <div class="tile-sub">increase</div>
+            </div>
+            <div class="result-tile sky-tile">
+              <div class="tile-label sky">Hike amount</div>
+              <div class="tile-value" id="hike-amt">₹1,000</div>
+              <div class="tile-sub" id="hike-amt-sub">per month</div>
+            </div>
+            <div class="result-tile gold-tile">
+              <div class="tile-label gold">Annual gain</div>
+              <div class="tile-value" id="annual-gain">₹12,000</div>
+              <div class="tile-sub">extra per year</div>
+            </div>
+          </div>
+          <div class="breakdown">
+            <div class="breakdown-meta">
+              <span>Base <strong id="bk-base">₹25,000</strong></span>
+              <span>+<strong id="bk-hike">₹1,000</strong> hike</span>
+            </div>
+            <div class="breakdown-bar-wrap">
+              <div
+                class="breakdown-bar-fill"
+                id="bk-fill"
+                style="width: 96%"
+              ></div>
+            </div>
+            <div class="breakdown-meta">
+              <span id="bk-pct1" style="color: var(--ink3)">96% base</span>
+              <span id="bk-pct2">4% hike</span>
+            </div>
+          </div>
+          <hr class="divider" />
+          <div class="yearly-row">
+            <div class="yearly-item">
+              <div class="yearly-num" id="yr-before">₹3,00,000</div>
+              <div class="yearly-label">Annual before hike</div>
+            </div>
+            <div class="yearly-item">
+              <div class="yearly-num" id="yr-after" style="color: var(--sage)">
+                ₹3,12,000
+              </div>
+              <div class="yearly-label">Annual after hike</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-compare">
+        <div class="card">
+          <div class="section-label">Add an offer</div>
+          <div class="add-row">
+            <input
+              type="number"
+              class="add-input"
+              id="add-sal"
+              placeholder="Base salary"
+            />
+            <input
+              type="number"
+              class="add-input"
+              id="add-hike"
+              placeholder="Hike %"
+            />
+          </div>
+          <div class="add-row">
+            <input
+              type="text"
+              class="add-input"
+              id="add-name"
+              placeholder='Label (e.g. "Startup A")'
+              style="
+                font-family:
+                  DM Sans,
+                  sans-serif;
+                flex: 2;
+              "
+            />
+            <button class="btn-add" onclick="addOffer()">Add</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-label">Offers</div>
+          <div id="offer-list">
+            <div class="empty-state">Add offers above to compare them</div>
+          </div>
+        </div>
+        <div class="card" id="compare-chart-card" style="display: none">
+          <div class="section-label" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Comparison</span>
+            <select id="compare-years" class="compare-select" onchange="renderCompare()">
+              <option value="1">1 Year</option>
+              <option value="3">3 Years</option>
+              <option value="5">5 Years</option>
+              <option value="10">10 Years</option>
+            </select>
+          </div>
+          <div class="chart-box"><canvas id="compare-chart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-growth">
+        <div class="card">
+          <div class="section-label">Annual hike rate</div>
+          <div class="field">
+            <div class="field-input-wrap">
+              <div class="field-prefix">%</div>
+              <input
+                type="number"
+                class="field-input"
+                id="growth-rate"
+                value="10"
+                oninput="renderGrowth()"
+              />
+            </div>
+          </div>
+          <div class="chart-box" style="margin-top: 14px">
+            <canvas id="growth-chart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-label">5-year projection</div>
+          <table class="growth-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Monthly</th>
+                <th>Annual</th>
+                <th>Extra</th>
+              </tr>
+            </thead>
+            <tbody id="growth-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tb-calc" onclick="showPage('calc')">
+        <div class="tab-icon-wrap">
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <rect x="2" y="2" width="12" height="12" rx="2" />
+            <path d="M5 6h6M5 8h4M5 10h3" />
+          </svg>
+        </div>
+        <span class="tab-lbl">Calc</span>
+      </button>
+      <button class="tab-btn" id="tb-compare" onclick="showPage('compare')">
+        <div class="tab-icon-wrap">
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <rect x="1" y="9" width="4" height="6" rx="1" />
+            <rect x="6" y="5" width="4" height="10" rx="1" />
+            <rect x="11" y="2" width="4" height="13" rx="1" />
+          </svg>
+        </div>
+        <span class="tab-lbl">Compare</span>
+      </button>
+      <button class="tab-btn" id="tb-growth" onclick="showPage('growth')">
+        <div class="tab-icon-wrap">
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="M2 12 L5 8 L8 9 L12 4 L14 5" />
+            <path d="M12 4 L14 4 L14 6" />
+          </svg>
+        </div>
+        <span class="tab-lbl">Growth</span>
+      </button>
+    </div>
+
+    <script>
+      let salaryMode = "monthly",
+        hikeMode = "amount",
+        offers = [],
+        cChart = null,
+        gChart = null;
+      const SW = [
+        "#4a7c59",
+        "#c05621",
+        "#2563a8",
+        "#b45309",
+        "#7c4a6b",
+        "#1d6b6b",
+      ];
+      function saveData() {
+        localStorage.setItem('hikeCalcData', JSON.stringify({
+          current: document.getElementById('current-salary').value,
+          hikeAmt: document.getElementById('hike-amount').value,
+          hikePct: document.getElementById('hike-percent').value,
+          growth: document.getElementById('growth-rate').value,
+          sm: salaryMode,
+          hm: hikeMode,
+          offs: offers,
+          compareYr: document.getElementById('compare-years') ? document.getElementById('compare-years').value : '1'
+        }));
+      }
+      function loadData() {
+        try {
+          const d = JSON.parse(localStorage.getItem('hikeCalcData'));
+          if (!d) return;
+          if (d.current) document.getElementById('current-salary').value = d.current;
+          if (d.hikeAmt) document.getElementById('hike-amount').value = d.hikeAmt;
+          if (d.hikePct) document.getElementById('hike-percent').value = d.hikePct;
+          if (d.growth) document.getElementById('growth-rate').value = d.growth;
+          if (d.sm) salaryMode = d.sm;
+          if (d.hm) hikeMode = d.hm;
+          if (d.offs) offers = d.offs;
+          if (d.compareYr && document.getElementById('compare-years')) document.getElementById('compare-years').value = d.compareYr;
+        } catch(e) {}
+      }
+      function fmt(n) {
+        n = Math.round(n);
+        return n >= 100000
+          ? "₹" + (n / 100000).toFixed(2) + "L"
+          : "₹" + n.toLocaleString("en-IN");
+      }
+      function fmtFull(n) {
+        return "₹" + Math.round(n).toLocaleString("en-IN");
+      }
+
+      function setSalaryMode(m) {
+        salaryMode = m;
+        document
+          .querySelectorAll(".pill-btn")
+          .forEach((b, i) =>
+            b.classList.toggle("active", i === (m === "monthly" ? 0 : 1)),
+          );
+        document.getElementById("salary-label").textContent =
+          "Your " + m + " salary";
+        document.getElementById("new-sal-sub").textContent =
+          m === "monthly" ? "per month" : "per year";
+        document.getElementById("hike-amt-sub").textContent =
+          m === "monthly" ? "per month" : "per year";
+        calculate();
+        renderCompare();
+      }
+
+      function setHikeMode(m) {
+        hikeMode = m;
+        document
+          .getElementById("tab-amount")
+          .classList.toggle("active", m === "amount");
+        document
+          .getElementById("tab-percent")
+          .classList.toggle("active", m === "percent");
+        document.getElementById("input-amount").style.display =
+          m === "amount" ? "" : "none";
+        document.getElementById("input-percent").style.display =
+          m === "percent" ? "" : "none";
+        calculate();
+      }
+
+      function calculate() {
+        const raw =
+          parseFloat(document.getElementById("current-salary").value) || 0;
+        const monthly = salaryMode === "monthly" ? raw : raw / 12;
+        let hikeM = 0;
+        if (hikeMode === "amount") {
+          const a =
+            parseFloat(document.getElementById("hike-amount").value) || 0;
+          hikeM = salaryMode === "monthly" ? a : a / 12;
+        } else {
+          const p =
+            parseFloat(document.getElementById("hike-percent").value) || 0;
+          hikeM = (monthly * p) / 100;
+        }
+        const pct = monthly > 0 ? (hikeM / monthly) * 100 : 0;
+        const newM = monthly + hikeM;
+        const dispNew = salaryMode === "monthly" ? newM : newM * 12;
+        const dispHike = salaryMode === "monthly" ? hikeM : hikeM * 12;
+        document.getElementById("new-sal").textContent = fmtFull(dispNew);
+        document.getElementById("hike-pct").textContent = pct.toFixed(2) + "%";
+        document.getElementById("hike-amt").textContent = fmtFull(dispHike);
+        document.getElementById("annual-gain").textContent = fmtFull(
+          hikeM * 12,
+        );
+        document.getElementById("yr-before").textContent = fmtFull(
+          monthly * 12,
+        );
+        document.getElementById("yr-after").textContent = fmtFull(newM * 12);
+        document.getElementById("bk-base").textContent = fmtFull(
+          salaryMode === "monthly" ? monthly : monthly * 12,
+        );
+        document.getElementById("bk-hike").textContent = fmtFull(dispHike);
+        const bp = newM > 0 ? (monthly / newM) * 100 : 100;
+        document.getElementById("bk-fill").style.width = bp.toFixed(1) + "%";
+        document.getElementById("bk-pct1").textContent =
+          bp.toFixed(1) + "% base";
+        document.getElementById("bk-pct2").textContent =
+          (100 - bp).toFixed(1) + "% hike";
+        renderGrowth();
+      }
+
+      function showPage(p) {
+        ["calc", "compare", "growth"].forEach((id) => {
+          document
+            .getElementById("page-" + id)
+            .classList.toggle("active", id === p);
+          document
+            .getElementById("tb-" + id)
+            .classList.toggle("active", id === p);
+        });
+        if (p === "compare") renderCompare();
+        if (p === "growth") renderGrowth();
+      }
+
+      function addOffer() {
+        const rawSal = parseFloat(document.getElementById("add-sal").value);
+        const hike = parseFloat(document.getElementById("add-hike").value);
+        const name =
+          document.getElementById("add-name").value ||
+          "Offer " + (offers.length + 1);
+        if (isNaN(rawSal) || isNaN(hike)) return;
+        
+        const sal = salaryMode === "monthly" ? rawSal : rawSal / 12;
+        offers.push({
+          name,
+          salary: sal,
+          hike,
+          color: SW[offers.length % SW.length],
+        });
+        ["add-sal", "add-hike", "add-name"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        renderCompare();
+      }
+      function removeOffer(i) {
+        offers.splice(i, 1);
+        renderCompare();
+      }
+
+      function renderCompare() {
+        const list = document.getElementById("offer-list");
+        const cc = document.getElementById("compare-chart-card");
+        if (!offers.length) {
+          list.innerHTML =
+            '<div class="empty-state">Add offers above to compare them</div>';
+          cc.style.display = "none";
+          if (cChart) {
+            cChart.destroy();
+            cChart = null;
+          }
+          return;
+        }
+
+        const yearSelect = document.getElementById("compare-years");
+        const years = yearSelect ? parseInt(yearSelect.value) : 1;
+        const suffix = salaryMode === "monthly" ? "/mo" : "/yr";
+
+        list.innerHTML = offers
+          .map((o, i) => {
+            const dispSal = salaryMode === "monthly" ? o.salary : o.salary * 12;
+            const afterHike = dispSal * Math.pow(1 + o.hike / 100, 1);
+            return `<div class="offer-item"><div class="offer-swatch" style="background:${o.color}"></div><div class="offer-info"><div class="offer-name">${o.name}</div><div class="offer-base">Base ₹${Math.round(dispSal).toLocaleString("en-IN")} · +${o.hike}%</div></div><div style="text-align:right"><div class="offer-new">${fmtFull(afterHike)}</div><div class="offer-pct">+${fmtFull(afterHike - dispSal)}${suffix}</div></div><button class="btn-del" onclick="removeOffer(${i})">×</button></div>`;
+          })
+          .join("");
+        cc.style.display = "";
+        const ctx = document.getElementById("compare-chart").getContext("2d");
+        if (cChart) cChart.destroy();
+        
+        const baseData = offers.map(o => salaryMode === "monthly" ? o.salary : o.salary * 12);
+        const projectedData = offers.map(o => {
+           const dispSal = salaryMode === "monthly" ? o.salary : o.salary * 12;
+           return dispSal * Math.pow(1 + o.hike / 100, years);
+        });
+        const labelStr = years === 1 ? "After 1 Year" : `After ${years} Years`;
+
+        cChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: offers.map((o) => o.name),
+            datasets: [
+              {
+                label: "Base",
+                data: baseData,
+                backgroundColor: offers.map((o) => o.color + "33"),
+                borderColor: offers.map((o) => o.color),
+                borderWidth: 1.5,
+                borderRadius: 5,
+              },
+              {
+                label: labelStr,
+                data: projectedData,
+                backgroundColor: offers.map((o) => o.color + "99"),
+                borderColor: offers.map((o) => o.color),
+                borderWidth: 1.5,
+                borderRadius: 5,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: "#a8a29e",
+                  font: { family: "DM Sans", size: 11 },
+                  boxWidth: 10,
+                },
+              },
+            },
+            scales: {
+              x: {
+                ticks: { color: "#a8a29e", font: { size: 11 } },
+                grid: { color: "#f0ede8" },
+              },
+              y: {
+                ticks: {
+                  color: "#a8a29e",
+                  font: { size: 10 },
+                  callback: (v) => fmt(v),
+                },
+                grid: { color: "#f0ede8" },
+              },
+            },
+          },
+        });
+        saveData();
+      }
+
+      function renderGrowth() {
+        const raw =
+          parseFloat(document.getElementById("current-salary").value) || 0;
+        const monthly = salaryMode === "monthly" ? raw : raw / 12;
+        const rate =
+          parseFloat(document.getElementById("growth-rate").value) || 10;
+        const yearsArr = [0, 1, 2, 3, 4, 5];
+        const sals = yearsArr.map((y) => monthly * Math.pow(1 + rate / 100, y));
+        
+        document.getElementById("growth-tbody").innerHTML = yearsArr
+          .map((y, i) => {
+            const mSal = sals[i];
+            const ySal = sals[i] * 12;
+            const dispDiff = salaryMode === "monthly" ? (mSal - monthly) : (ySal - (monthly * 12));
+            return `<tr class="${y === 0 ? "now-row" : ""}"><td class="yr">${y === 0 ? "Now" : "Yr " + y}</td><td>${fmtFull(mSal)}</td><td>${fmtFull(ySal)}</td><td class="gain">${y === 0 ? "—" : "+" + fmtFull(dispDiff)}</td></tr>`;
+          })
+          .join("");
+          
+        const ctx = document.getElementById("growth-chart").getContext("2d");
+        if (gChart) gChart.destroy();
+        
+        const dispSals = salaryMode === "monthly" ? sals : sals.map(s => s * 12);
+        const chartLabel = salaryMode === "monthly" ? "Monthly salary" : "Yearly salary";
+
+        gChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: yearsArr.map((y) => (y === 0 ? "Now" : "Yr " + y)),
+            datasets: [
+              {
+                label: chartLabel,
+                data: dispSals,
+                borderColor: "#4a7c59",
+                backgroundColor: "rgba(74,124,89,0.08)",
+                borderWidth: 2,
+                pointBackgroundColor: "#4a7c59",
+                pointRadius: 5,
+                tension: 0.35,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                ticks: { color: "#a8a29e", font: { size: 11 } },
+                grid: { color: "#f0ede8" },
+              },
+              y: {
+                ticks: {
+                  color: "#a8a29e",
+                  font: { size: 10 },
+                  callback: (v) => fmt(v),
+                },
+                grid: { color: "#f0ede8" },
+              },
+            },
+          },
+        });
+        saveData();
+      }
+
+      loadData();
+      setSalaryMode(salaryMode);
+      setHikeMode(hikeMode);
+    </script>
+  </body>
+</html>
