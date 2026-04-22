@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://i.ibb.co/BKTSgYV2/Hike-Calc.avif" alt="SalaryHike Calculator" width="120"/>
+  <img src="https://i.ibb.co/BKTSgYV2/Hike-Calc.avif" alt="SalaryHike Calculator" width="320"/>
 </p>
 
 <p align="center">
-  <strong>A beautifully crafted, offline-first salary hike calculator for professionals navigating appraisals, job offers, and long-term career growth.</strong>
+  <strong>A beautifully crafted salary hike calculator for professionals navigating appraisals, job offers, and long-term career growth.</strong>
 </p>
 
 <p align="center">
@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/badge/license-MIT-2563a8?style=flat-square&labelColor=1c1917" alt="license"/>
   <img src="https://img.shields.io/badge/platform-Web%20%7C%20Mobile-b45309?style=flat-square&labelColor=1c1917" alt="platform"/>
   <img src="https://img.shields.io/badge/dependencies-zero-c05621?style=flat-square&labelColor=1c1917" alt="dependencies"/>
-  <img src="https://img.shields.io/badge/offline-ready-4a7c59?style=flat-square&labelColor=1c1917" alt="offline"/>
+  <img src="https://img.shields.io/badge/internet-required-c05621?style=flat-square&labelColor=1c1917" alt="internet required"/>
 </p>
 
 <p align="center">
@@ -25,6 +25,8 @@
 ## ✦ Why SalaryHike Calculator?
 
 Every professional faces the same friction during appraisal season — scattered spreadsheets, mental math, and no easy way to compare multiple offers side by side. **SalaryHike Calculator** solves this with a clean, single-file web app that runs entirely in your browser. No sign-up. No server. No data leaves your device.
+
+> **Note:** An internet connection is required to load Chart.js and Google Fonts from CDN.
 
 Whether you're evaluating a 15% hike from your current employer, comparing three competing job offers, or planning where your salary will be in five years — this tool handles it all with clarity and elegance.
 
