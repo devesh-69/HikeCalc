@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.ibb.co/BKTSgYV2/Hike-Calc.avif" alt="SalaryHike Calculator" width="320"/>
+  <img src="https://i.ibb.co/BKTSgYV2/Hike-Calc.avif" alt="SalaryHike Calculator" width="120"/>
 </p>
 
 <p align="center">
