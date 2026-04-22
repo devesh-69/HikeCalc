@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.ibb.co/BKTSgYV2/Hike-Calc.avif" alt="SalaryHike Calculator" width="320"/>
+  <img src="https://i.ibb.co/BKTSgYV2/Hike-Calc.avif" alt="SalaryHike Calculator" width="120"/>
 </p>
 
 <p align="center">
@@ -12,6 +12,12 @@
   <img src="https://img.shields.io/badge/platform-Web%20%7C%20Mobile-b45309?style=flat-square&labelColor=1c1917" alt="platform"/>
   <img src="https://img.shields.io/badge/dependencies-zero-c05621?style=flat-square&labelColor=1c1917" alt="dependencies"/>
   <img src="https://img.shields.io/badge/offline-ready-4a7c59?style=flat-square&labelColor=1c1917" alt="offline"/>
+</p>
+
+<p align="center">
+  <a href="https://devesh-69.github.io/HikeCalc/salary-hike-calculator%20(Light).html">
+    <img src="https://img.shields.io/badge/Live%20Demo-Try%20it%20now%20%E2%86%92-4a7c59?style=for-the-badge&labelColor=1c1917" alt="Live Demo"/>
+  </a>
 </p>
 
 ---
@@ -61,6 +67,10 @@ Enter a projected annual hike rate and see a **5-year salary trajectory** — bo
 
 No build step. No dependencies. No npm install.
 
+**Try it live →** [devesh-69.github.io/HikeCalc](https://devesh-69.github.io/HikeCalc/salary-hike-calculator%20(Light).html)
+
+Or run it locally:
+
 ```bash
 # Clone the repository
 git clone https://github.com/devesh-69/HikeCalc.git
@@ -69,7 +79,7 @@ git clone https://github.com/devesh-69/HikeCalc.git
 open salary-hike-calculator.html
 ```
 
-Or simply [download the HTML file](./salary-hike-calculator.html) and open it. That's it.
+Or simply download the HTML file and open it. That's it.
 
 ---
 
